@@ -9,4 +9,95 @@ body {
   background-color: #ccc;
   font-family: monospace;
   font-size: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/**** CALCULATOR ****/
+
+.calculatorBody {
+  width: 405px;
+  height: 500px;
+  border-radius: 5px;
+  background-color: #bbb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+#calculatorScreen {
+  height: 95px;
+  width: 390px;
+  background-color: #eee;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: flex-end;
+}
+
+p {
+  font-size: 3em;
+  margin-right: 10px;
+}
+
+#previous {
+  font-size: 2em;
+}
+
+.calculatorButtons {
+  height: 70px;
+  width: 390px;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+/**** BUTTONS ****/
+
+.btn {
+  border: none;
+  border-radius: 5px;
+  height: 70px;
+  width: 92px;
+}
+
+.bigBtn {
+  border: none;
+  border-radius: 5px;
+  width: 192px;
+}
+
+.btn:hover {
+  background-color: #ddd;
+}
+
+#clear {
+  background-color: #deffde;
+}
+
+#clear:hover {
+  background-color: #c2dfc2;
+}
+
+#delete {
+  background-color: #ffdede;
+}
+
+#delete:hover {
+  background-color: #dfc2c2;
+}
+
+#equals {
+  background-color: #dee7ff;
+}
+
+#equals:hover {
+  background-color: #c2cadf;
+}
+
+button:active {
+  transform: scale(0.97);
 }
