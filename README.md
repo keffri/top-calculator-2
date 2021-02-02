@@ -1,2 +1,1 @@
-# top-calculator-2
-TOP Calculator #2
+The Odin Project Calculator #2
