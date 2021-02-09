@@ -31,10 +31,11 @@ body {
   height: 95px;
   width: 390px;
   background-color: #eee;
+  font-size: 1.2em;
   border-radius: 5px;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: flex-end;
 }
 
