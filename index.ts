@@ -1,4 +1,9 @@
 const Calculator = {
+  previousValue: '',
+  currentValue: '',
+  operation: null,
+  answer: undefined,
+
   add: function (operandOne: number, operandTwo: number) {
     return operandOne + operandTwo;
   },
@@ -34,106 +39,112 @@ const Calculator = {
       return Calculator.divide(parseFloat(operandOne), parseFloat(operandTwo));
     }
   },
+
+  updateDisplay: function (number: string) {
+    if (number === '.' && display.textContent.includes('.')) {
+      return;
+    }
+    if (display.textContent === '0') {
+      if (number === '0' || number === '.') {
+        return;
+      }
+    } else if (Calculator.operation && Calculator.previousValue) {
+      Calculator.currentValue += number;
+      display.textContent = Calculator.currentValue;
+      return;
+    }
+    Calculator.previousValue += number;
+    display.textContent = Calculator.previousValue;
+  },
+
+  storeValue: function () {
+    if (!Calculator.previousValue) {
+      Calculator.previousValue = display.textContent;
+    }
+  },
+
+  calculate: function () {
+    if (!Calculator.previousValue || !Calculator.currentValue) {
+      return;
+    }
+    Calculator.answer = Calculator.operate(
+      Calculator.operation,
+      Calculator.previousValue,
+      Calculator.currentValue
+    );
+    Calculator.previousValue = Calculator.answer;
+    Calculator.currentValue = '';
+    display.textContent = Calculator.answer;
+  },
+
+  deleteNumber: function () {
+    if (!Calculator.currentValue) {
+      Calculator.previousValue = String(Calculator.previousValue).slice(0, -1);
+      display.textContent = display.textContent.slice(0, -1);
+    } else {
+      Calculator.currentValue = Calculator.currentValue.slice(0, -1);
+      display.textContent = display.textContent.slice(0, -1);
+    }
+  },
+
+  allClear: function () {
+    Calculator.previousValue = '';
+    Calculator.currentValue = '';
+    Calculator.operation = null;
+    display.textContent = '0';
+  },
 };
 
-// *** OLD  CODE TO BE UPDATED *** //
+/* DOM Elements */
 
-const display = document.getElementById('display');
+const display: HTMLParagraphElement = document.getElementById(
+  'display'
+) as HTMLParagraphElement;
 
-const numbers = document.querySelectorAll('.number');
-numbers.forEach((number) => {
-  number.addEventListener('click', (e) => {
-    let numberValue = (e.target as HTMLElement).textContent;
-    console.log(numberValue);
-    updateDisplay(numberValue);
+const numbers = document.querySelectorAll<HTMLButtonElement>('.number');
+
+const operators = document.querySelectorAll<HTMLButtonElement>('.operator');
+
+const equalsButton: HTMLButtonElement = document.getElementById(
+  'equals'
+) as HTMLButtonElement;
+
+const deleteButton: HTMLButtonElement = document.getElementById(
+  'delete'
+) as HTMLButtonElement;
+
+const clearButton: HTMLButtonElement = document.getElementById(
+  'clear'
+) as HTMLButtonElement;
+
+numbers.forEach((number: HTMLButtonElement) => {
+  number?.addEventListener('click', (e) => {
+    let numberValue: string = (e.target as HTMLElement).textContent;
+    Calculator.updateDisplay(numberValue);
   });
 });
 
-function updateDisplay(number) {
-  if (number === '.' && display.textContent.includes('.')) {
-    return;
-  }
-  if (display.textContent === '0') {
-    if (number === '0' || number === '.') {
+operators.forEach((operator: HTMLButtonElement) => {
+  operator?.addEventListener('click', (e) => {
+    if (Calculator.previousValue === '') {
       return;
     }
-    display.textContent = '';
-  } else if (operation && previousValue) {
-    currentValue += number;
-    display.textContent = currentValue;
-    return;
-  }
-  previousValue += number;
-  display.textContent = previousValue;
-}
-
-let previousValue = '';
-let currentValue = '';
-
-function storeValue() {
-  if (!previousValue) {
-    previousValue = display.textContent;
-  }
-}
-
-let operation = null;
-
-const operators = document.querySelectorAll('.operator');
-operators.forEach((operator) => {
-  operator.addEventListener('click', (e) => {
-    if (previousValue === '') {
-      return;
-    }
-    storeValue();
-    if (previousValue && currentValue) {
-      calculate();
-      operation = (e.target as HTMLElement).id;
+    Calculator.storeValue();
+    if (Calculator.previousValue && Calculator.currentValue) {
+      Calculator.calculate();
+      Calculator.operation = (e.target as HTMLElement).id;
     } else {
-      operation = (e.target as HTMLElement).id;
+      Calculator.operation = (e.target as HTMLElement).id;
     }
   });
 });
 
-let answer;
-
-const equalsButton = document.getElementById('equals');
-equalsButton.addEventListener('click', () => {
-  calculate();
+equalsButton?.addEventListener('click', () => {
+  Calculator.calculate();
 });
 
-function calculate() {
-  if (!previousValue || !currentValue) {
-    return;
-  }
-  answer = Calculator.operate(operation, previousValue, currentValue);
-  previousValue = answer;
-  currentValue = '';
-  display.textContent = answer;
-}
+deleteButton?.addEventListener('click', Calculator.deleteNumber);
 
-const deleteButton = document.getElementById('delete');
-
-deleteButton.addEventListener('click', deleteNumber);
-
-function deleteNumber() {
-  if (!currentValue) {
-    previousValue = String(previousValue).slice(0, -1);
-    display.textContent = display.textContent.slice(0, -1);
-  } else {
-    currentValue = currentValue.slice(0, -1);
-    display.textContent = display.textContent.slice(0, -1);
-  }
-}
-
-const clearButton = document.getElementById('clear');
-
-clearButton.addEventListener('click', allClear);
-
-function allClear() {
-  previousValue = '';
-  currentValue = '';
-  operation = null;
-  display.textContent = '0';
-}
+clearButton?.addEventListener('click', Calculator.allClear);
 
 export default Calculator;
